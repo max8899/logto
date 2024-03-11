@@ -24,11 +24,9 @@ export const fetchOidcConfig = async (
   issuer: string
 ): Promise<CamelCaseKeys<OidcConfigResponse>> => {
   try {
-    const { body } = await got.get(`${issuer}/.well-known/openid-configuration`, {
-      responseType: 'json',
-    });
+    const { body } = await got.get(`${issuer}/.well-known/openid-configuration`);
 
-    const result = oidcConfigResponseGuard.safeParse(body);
+    const result = oidcConfigResponseGuard.safeParse(parseJson(body));
 
     if (!result.success) {
       throw new SsoConnectorError(SsoConnectorErrorCodes.InvalidConfig, {
